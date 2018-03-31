@@ -7,8 +7,8 @@ services:
     ports:
       - 8001:80
     volumes:
-      - ./volume/conf/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./volume/nginx:/home
+      - ../../volume/conf/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ../../volume/nginx:/home
     restart: unless-stopped
     #links:
     #  - database:database
@@ -20,8 +20,8 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ./volume/mysql:/var/lib/mysql 
-      - ./volume/conf/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      - ../../volume/mysql:/var/lib/mysql 
+      - ../../volume/conf/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
     environment:
       MYSQL_ROOT_PASSWORD: aq1sw2de
       MYSQL_DATABASE: XsGov
