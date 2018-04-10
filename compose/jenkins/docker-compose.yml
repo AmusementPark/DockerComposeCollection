@@ -1,0 +1,13 @@
+
+version: '2'
+services:
+  jenkins:
+    image: 'jenkins'
+    ports:
+      - '8080:8080'
+#      - '8443:8443'
+      - '50000:50000'
+    volumes:
+      - '../../volume/jenkins_home:/var/jenkins_home'
+#    environment:
+#      JAVA_OPTS: "-Dhudson.footerURL=http://mycompany.com"
