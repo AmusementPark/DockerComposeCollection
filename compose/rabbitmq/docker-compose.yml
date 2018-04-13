@@ -53,3 +53,5 @@ services:
    ports:
      - 15672:15672
      - 5672:5672
+     # HAProxy dashboard
+     - 1936:1936  
