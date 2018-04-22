@@ -1,0 +1,21 @@
+version: '3'
+services:
+
+  mongodb:
+    # build:
+    #   context: ./replica-set/build/
+    image: mongo:latest
+    # command: mongod --replSet mongodb0 --smallfiles
+    volumes:
+       - ../../volume/mongodb/db:/data/db
+    # environment:
+    #   MONGO_PORT: 27018
+    # network_mode: host
+    ports:
+      - 27017:27017
+    # volumes:
+    #   - $PWD/mongo-entrypoint.sh:/mongo-entrypoint.sh
+    # entrypoint: /mongo-entrypoint.sh
+    # networks:
+    #   - mongo_network_default
+

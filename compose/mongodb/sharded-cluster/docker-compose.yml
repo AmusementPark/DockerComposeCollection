@@ -1,0 +1,56 @@
+version: '3'
+services:
+
+  config0:
+    image: mongo:latest
+    command: mongod --replSet config --configsvr
+  config1:
+    image: mongo:latest
+    command: mongod --replSet config --configsvr
+
+  cluster0-shard0-0:
+    image: mongo:latest
+    command: mongod --replSet cluster0-shard0 --shardsvr --smallfiles
+  cluster0-shard0-1:
+    image: mongo:latest
+    command: mongod --replSet cluster0-shard0 --shardsvr --smallfiles
+  cluster0-shard0-2:
+    image: mongo:latest
+    command: mongod --replSet cluster0-shard0 --shardsvr --smallfiles
+
+  cluster1-shard0-0:
+    image: mongo:latest
+    command: mongod --replSet cluster1-shard0 --shardsvr --smallfiles
+  cluster1-shard0-1:
+    image: mongo:latest
+    command: mongod --replSet cluster1-shard0 --shardsvr --smallfiles
+  cluster1-shard0-2:
+    image: mongo:latest
+    command: mongod --replSet cluster1-shard0 --shardsvr --smallfiles
+
+  mongos:
+    image: mongo:latest
+    depends_on:
+    - config0
+    - config1
+    command: mongos --configdb config/config0,config1 --bind_ip_all
+    ports:
+    - 27017:27017
+
+  setup:
+    image: mongo:latest
+    depends_on:
+    - config0
+    - config1
+    - mongos
+    - cluster0-shard0-0
+    - cluster0-shard0-1
+    - cluster0-shard0-2
+    - cluster1-shard0-0
+    - cluster1-shard0-1
+    - cluster1-shard0-2
+    volumes:
+    - $PWD/docker-entrypoint.sh:/docker-entrypoint.sh
+    entrypoint: /docker-entrypoint.sh
+    links:
+    - mongos:mongos

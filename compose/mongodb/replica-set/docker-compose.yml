@@ -1,0 +1,105 @@
+version: '3'
+services:
+
+  mongodb0:
+    image: mongo:latest
+    command: mongod --replSet mongodb0 --smallfiles
+    # volumes:
+    #    - ../../../volume/mongodb/cl0:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - mongo_network
+    # volumes:
+    #   - $PWD/mongo-entrypoint.sh:/mongo-entrypoint.sh
+    # entrypoint: /mongo-entrypoint.sh
+    # networks:
+    #   - mongo_network_default
+  mongodb1:
+    image: mongo:latest
+    command: mongod --replSet mongodb0 --smallfiles
+    # volumes:
+    #    - ../../../volume/mongodb/cl1:/data/db
+    networks:
+      - mongo_network
+    # volumes:
+    #   - $PWD/mongo-entrypoint.sh:/mongo-entrypoint.sh
+    # entrypoint: /mongo-entrypoint.sh
+    ports:
+      - 27018:27017
+    # networks:
+    #   - mongo_network_default
+  mongodb2:
+    image: mongo:latest
+    # entrypoint: |
+    #   bash -c 'bash -s <<EOF
+    #     mongod --replSet cluster0 --smallfiles
+    #     mongo --eval "rs.slaveOk()"
+    #   EOF'
+    command: mongod --replSet mongodb0 --smallfiles
+    # volumes:
+    #    - ../../../volume/mongodb/cl2:/data/db
+    networks:
+      - mongo_network
+    # volumes:
+    #   - $PWD/mongo-entrypoint.sh:/mongo-entrypoint.sh
+    # entrypoint: /mongo-entrypoint.sh
+    ports:
+      - 27019:27017
+    # networks:
+    #   - mongo_network_default
+
+  # mongo-cli:
+  #   image: mongo:latest
+
+  setup:
+    image: mongo:latest
+    depends_on:
+      - mongodb0
+      - mongodb1
+      - mongodb2
+    volumes:
+      - $PWD/docker-entrypoint.sh:/docker-entrypoint.sh
+    entrypoint: /docker-entrypoint.sh
+    network_mode: host
+
+networks:
+  mongo_network:
+    driver: bridge
+# ------------------------------------------------------------------
+# another version
+# ------------------------------------------------------------------
+# version: '2'
+
+# services:
+#   mongodb-primary:
+#     image: 'bitnami/mongodb:latest'
+#     ports:
+#       - "27017:27017"
+#     environment:
+#       - MONGODB_REPLICA_SET_MODE=primary
+#     volumes:
+#       - 'mongodb_master_data:/bitnami'
+
+#   mongodb-secondary:
+#     image: 'bitnami/mongodb:latest'
+#     depends_on:
+#       - mongodb-primary
+#     environment:
+#       - MONGODB_REPLICA_SET_MODE=secondary
+#       - MONGODB_PRIMARY_HOST=mongodb-primary
+
+#   mongodb-arbiter:
+#     image: 'bitnami/mongodb:latest'
+#     depends_on:
+#       - mongodb-primary
+#     environment:
+#       - MONGODB_REPLICA_SET_MODE=arbiter
+#       - MONGODB_PRIMARY_HOST=mongodb-primary
+
+#   mongo-cli:
+#     image: 'bitnami/mongodb:latest'
+# volumes:
+#   mongodb_master_data:
+#     driver: local
+# ------------------------------------------------------------------

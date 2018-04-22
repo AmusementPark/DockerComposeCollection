@@ -1,0 +1,59 @@
+# version: '2'
+# services:
+#   cassandra-1:
+#     image: cassandra:3.11
+#     container_name: cassandra-1
+#     environment:
+#       - CASSANDRA_BROADCAST_ADDRESS=cassandra-1
+#       # - CASSANDRA_SEEDS=cassandra-1
+#     ports:
+#       - 7000
+
+#   cassandra-2:
+#     image: cassandra:3.11
+#     container_name: cassandra-2
+#     environment:
+#       - CASSANDRA_BROADCAST_ADDRESS=cassandra-2
+#       - CASSANDRA_SEEDS=cassandra-1
+#     ports:
+#       - 7000
+#     depends_on:
+#       - cassandra-1
+
+#   cassandra-3:
+#     image: cassandra:3.11
+#     container_name: cassandra-3
+#     environment:
+#       - CASSANDRA_BROADCAST_ADDRESS=cassandra-3
+#       - CASSANDRA_SEEDS=cassandra-1
+#     ports:
+#       - 7000
+#     depends_on:
+#       - cassandra-2
+
+# version: '2'
+
+services:
+  cassandra-seed1:
+    image: cassandra:3.11
+    container_name: cassandra-seed1
+    hostname: cassandra-seed1
+    # restart: always
+    ports:
+      - "9042:9042"
+    networks:
+      - default_network
+
+  cassandra-node:
+    image: cassandra:3.11
+    # restart: always
+    links:
+      - cassandra-seed1:seed1
+    environment:
+      - CASSANDRA_SEEDS=seed1
+    networks:
+      - default_network
+
+networks:
+  default_network:
+      external: true
