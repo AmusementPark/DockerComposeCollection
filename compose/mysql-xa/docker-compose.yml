@@ -1,0 +1,33 @@
+version: "3"
+services:
+  mysql0:
+    image: mysql
+    container_name: mysql_xa0
+    #hostname: postgis
+    ports:
+      - 3306:3306
+    volumes:
+      - ../../volume/mysql-xa/0:/var/lib/mysql 
+      - ../../volume/conf/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: aq1sw2de
+      MYSQL_DATABASE: XA0
+      MYSQL_USER: warmgoal
+      MYSQL_PASSWORD: aq1sw2de
+    restart: unless-stopped
+
+  mysql1:
+    image: mysql
+    container_name: mysql_xa1
+    #hostname: postgis
+    ports:
+      - 3307:3306
+    volumes:
+      - ../../volume/mysql-xa/1:/var/lib/mysql 
+      - ../../volume/conf/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: aq1sw2de
+      MYSQL_DATABASE: XA1
+      MYSQL_USER: warmgoal
+      MYSQL_PASSWORD: aq1sw2de
+    restart: unless-stopped
