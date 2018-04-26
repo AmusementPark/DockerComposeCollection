@@ -1,0 +1,58 @@
+version: "3"
+services:
+  mysql_master:
+    image: mysql
+    container_name: mysql_master
+    ports:
+      - 3306:3306
+    volumes:
+      - ../../volume/mysql-replica/mdata:/var/lib/mysql 
+      - ../../volume/mysql-replica/m/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: aq1sw2de
+      MYSQL_DATABASE: WMG
+      MYSQL_USER: warmgoal
+      MYSQL_PASSWORD: aq1sw2de
+    restart: unless-stopped
+    hostname: master
+    networks: 
+      - mysql-cluster
+
+  mysql_slave0:
+    image: mysql
+    container_name: mysql_slave0
+    ports:
+      - 3307:3306
+    volumes:
+      - ../../volume/mysql-replica/s0data:/var/lib/mysql 
+      - ../../volume/mysql-replica/s0/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      - ../../volume/mysql-replica/s:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: aq1sw2de
+      MYSQL_DATABASE: WMG
+      MYSQL_USER: warmgoal
+      MYSQL_PASSWORD: aq1sw2de
+    restart: unless-stopped
+    hostname: slave0
+    networks: 
+      - mysql-cluster
+
+  # mysql_slave1:
+  #   image: mysql
+  #   container_name: mysql_xa1
+  #   #hostname: postgis
+  #   ports:
+  #     - 3307:3306
+  #   volumes:
+  #     - ../../volume/mysql-replica/1:/var/lib/mysql 
+  #     - ../../volume/conf/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: aq1sw2de
+  #     MYSQL_DATABASE: XA1
+  #     MYSQL_USER: warmgoal
+  #     MYSQL_PASSWORD: aq1sw2de
+  #   restart: unless-stopped
+
+  networks:
+    mysql-cluster:
+      driver: bridge
