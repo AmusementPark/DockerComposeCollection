@@ -1,0 +1,4 @@
+-- DROP USER 'warmgoal'@'%';
+CREATE USER 'warmgoal'@'%' IDENTIFIED BY 'aq1sw2de';
+GRANT ALL PRIVILEGES ON *.* TO 'warmgoal'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;

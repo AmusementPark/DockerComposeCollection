@@ -38,8 +38,15 @@ tmpdir		= /tmp
 lc-messages-dir	= /usr/share/mysql
 skip-external-locking
 
+
+
 # MASTER/SLAVE
-server-id=1000
+server-id=1
+log-bin=mysql-bin
+binlog-ignore-db=mysql
+#log-bin=master-bin
+#log-bin-index=master-bin.index
+
 
 #
 # Instead of skip-networking the default is now to listen only on
